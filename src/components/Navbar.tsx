@@ -39,7 +39,12 @@ export const Navbar = () => {
               Create Community
             </Link>
           </div>
-
+          {/* desktop auth */}
+          <div>
+            <button>
+                sign in with github
+            </button>
+          </div>
 
           {/* mobile menu button */}
           <div className="md:hidden">
