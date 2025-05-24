@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query"
 import { supabase } from "../supabase-client";
+import { PostItem } from "./PostItem";
 
-interface Post {
+export interface Post {
     id: number;
     title: string;
     content: string;
@@ -31,8 +32,8 @@ export const PostList = () => {
     console.log(data);
     return (
         <div>
-            {data?.map((post) => ( 
-                <PostItem />
+            {data?.map((post, key) => ( 
+                <PostItem  post={post} key={key}/>
         ))}
         </div>
     )
