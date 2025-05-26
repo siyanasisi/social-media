@@ -92,11 +92,27 @@ export const LikeButton = ({postId}: Props) => {
     
     const likes = votes?.filter((v) => v.vote === 1).length || 0;
     const dislikes = votes?.filter((v) => v.vote === -1).length || 0;
+    const userVote = votes?.find((v) => v.user_id === user?.id)?.vote;
 
-    return (
-        <div>
-            <button onClick={() => mutate(1)}> Like {likes}</button>
-            <button onClick={() => mutate(-1)}> Dislike {dislikes}</button>
-        </div>
-    )
-}
+
+return (
+    <div className="flex items-center space-x-4 my-4">
+      <button
+        onClick={() => mutate(1)}
+        className={`px-3 py-1 cursor-pointer rounded transition-colors duration-150 ${
+          userVote === 1 ? "bg-green-500 text-white" : "bg-gray-200 text-black"
+        }`}
+      >
+        👍 {likes}
+      </button>
+      <button
+        onClick={() => mutate(-1)}
+        className={`px-3 py-1 cursor-pointer rounded transition-colors duration-150 ${
+          userVote === -1 ? "bg-red-500 text-white" : "bg-gray-200 text-black"
+        }`}
+      >
+        👎 {dislikes}
+      </button>
+    </div>
+  );
+};
