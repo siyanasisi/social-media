@@ -1,10 +1,19 @@
 import { useMutation } from '@tanstack/react-query';
 import { supabase } from '../supabase-client';
 import { useAuth } from '../context/AuthContext';
+import { useQuery } from '@tanstack/react-query';
+
 
 interface Props {
     postId: number;
 };
+
+interface Vote {
+    id: number; 
+    post_id: number;
+    user_id: string;
+    vote: number;
+}
 const vote = async (voteValue: number, postId: number, userId: string) => {
 
      const { data: existingVote} = await supabase
@@ -40,9 +49,26 @@ const vote = async (voteValue: number, postId: number, userId: string) => {
 
 
 };
+
+const fetchVotes = async (postId: number) : Promise<Vote[]> => {
+const { data, error } = await supabase
+        .from("votes")
+        .select("*")
+        .eq("post_id", postId)
+
+    if (error) throw new Error(error.message);
+    return data as Vote[];
+
+}
 export const LikeButton = ({postId}: Props) => {
 
-    const {user} = useAuth();
+    const { user } = useAuth();
+
+    const { data: votes, isLoading, error } = useQuery<Vote[], Error>({
+        queryKey: ["votes", postId],
+        queryFn: () => fetchVotes(postId),
+        refetchInterval: 500, // Refetch votes every 5 seconds
+    });
         
     const { mutate } = useMutation({
         mutationFn: (voteValue: number) =>  {
@@ -50,11 +76,18 @@ export const LikeButton = ({postId}: Props) => {
             if (!user) throw new Error("You must be logged in to vote");
              return vote(voteValue, postId, user.id);
     }});
+
+    if (isLoading) return <div>Loading votes...</div>;
+
+    if(error) return <div>Error: {error.message}</div>;
     
+    const likes = votes?.filter((v) => v.vote === 1).length || 0;
+    const dislikes = votes?.filter((v) => v.vote === -1).length || 0;
+
     return (
         <div>
-            <button onClick={() => mutate(1)}> Like</button>
-            <button onClick={() => mutate(-1)}> Dislike</button>
+            <button onClick={() => mutate(1)}> Like {likes}</button>
+            <button onClick={() => mutate(-1)}> Dislike {dislikes}</button>
         </div>
     )
 }
