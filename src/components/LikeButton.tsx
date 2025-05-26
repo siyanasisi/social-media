@@ -2,7 +2,8 @@ import { useMutation } from '@tanstack/react-query';
 import { supabase } from '../supabase-client';
 import { useAuth } from '../context/AuthContext';
 import { useQuery } from '@tanstack/react-query';
-
+import { useQueryClient } from '@tanstack/react-query';
+ 
 
 interface Props {
     postId: number;
@@ -59,15 +60,17 @@ const { data, error } = await supabase
     if (error) throw new Error(error.message);
     return data as Vote[];
 
-}
+};
 export const LikeButton = ({postId}: Props) => {
 
     const { user } = useAuth();
 
+    const queryClient = useQueryClient();
+
     const { data: votes, isLoading, error } = useQuery<Vote[], Error>({
         queryKey: ["votes", postId],
         queryFn: () => fetchVotes(postId),
-        refetchInterval: 500, // Refetch votes every 5 seconds
+        refetchInterval: 500
     });
         
     const { mutate } = useMutation({
@@ -75,7 +78,13 @@ export const LikeButton = ({postId}: Props) => {
 
             if (!user) throw new Error("You must be logged in to vote");
              return vote(voteValue, postId, user.id);
-    }});
+    },
+
+    onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["votes", postId] });
+
+    }
+});
 
     if (isLoading) return <div>Loading votes...</div>;
 
