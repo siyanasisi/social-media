@@ -67,7 +67,11 @@ export const LikeButton = ({postId}: Props) => {
 
     const queryClient = useQueryClient();
 
-    const { data: votes, isLoading, error } = useQuery<Vote[], Error>({
+    const { 
+        data: votes, 
+        isLoading, 
+        error 
+    } = useQuery<Vote[], Error>({
         queryKey: ["votes", postId],
         queryFn: () => fetchVotes(postId),
         refetchInterval: 500
