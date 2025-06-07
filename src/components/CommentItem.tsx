@@ -37,6 +37,7 @@ const createReply = async (
 export const CommentItem = ({comment, postId}: Props) => {
     const [showReply, setShowReply] = useState<boolean>(false);
     const [replyText, setReplyText] = useState<string>("");
+    const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
 
     const { user } = useAuth();
     const queryClient = useQueryClient();
@@ -109,6 +110,45 @@ export const CommentItem = ({comment, postId}: Props) => {
                     <p className="text-red-500 mt-2">Error posting reply</p>
                 )}
             </form>
+        )}
+
+
+        {comment.children && comment.children.length > 0 && (
+            <div>
+                <button onClick = {() => setIsCollapsed((prev) => !prev)}> 
+                   {isCollapsed ? (
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={2}
+                        stroke="currentColor"
+                        className="w-4 h-4"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M19 9l-7 7-7-7"
+                        />
+                    </svg>
+                    ):(
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={2}
+                        stroke="currentColor"
+                        className="w-4 h-4"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M5 15l7-7 7 7"
+                            />
+                    </svg>
+                    ) }
+                </button>
+            </div>
         )}
 
     </div>
