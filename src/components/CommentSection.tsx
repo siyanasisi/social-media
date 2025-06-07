@@ -160,7 +160,7 @@ const fetchComments = async (postId: number): Promise<Comment[]> => {
 
 
             {/* comments display section */}
-            <div>
+            <div className="space-y-4">
                 {commentTree.map((comment, key) => (
                     <CommentItem key={key} comment={comment} postId={postId}/>
                 ))}

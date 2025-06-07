@@ -66,15 +66,22 @@ export const CommentItem = ({comment, postId}: Props) => {
       
     };
     return (
-    <div>
-        <div>
-            <div>
+    <div className="pl-4 border-l border-white/10">
+        <div className="mb-4">
+            <div className="flex items-center space-x-2">
                {/* name of commenter */} 
-               <span> {comment.author}</span>
-               <span>{new Date(comment.created_at).toLocaleString()}</span>
+               <span className="text-sm font-bold text-blue-400"> 
+                {comment.author}
+                </span>
+               <span className="text-xs text-gray-500">
+                {new Date(comment.created_at).toLocaleString()}
+                </span>
             </div>
-            <p>{comment.content}</p>
-            <button onClick={() => setShowReply((prev) => !prev)}>
+            <p className="text-gray-300">{comment.content}</p>
+            <button 
+                onClick={() => setShowReply((prev) => !prev)}
+                className="text-blue-500 text-sm mt-1"
+            >
                 {showReply ? "Cancel" : "Reply"}
             </button>
         </div>
