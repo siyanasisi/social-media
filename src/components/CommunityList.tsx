@@ -25,19 +25,34 @@ export const CommunityList = () => {
         queryFn: fetchCommunities})
 
     if(isLoading) {
-        return <div> loading communities...</div>
+        return (
+        <div className="text-center py-4"> 
+            loading communities...
+        </div>
+        )
     }
 
     if(error) {
-        return <div> Error: {error.message}</div>
+        return (
+        <div className="text-center text-red-500 py-4"> 
+            Error: {error.message}
+        </div>
+        )
     }
     return( 
-    <div> {data?.map((community, key) => (
-         <div key={key}>
-            <Link to="community">
+    <div className="max-w-5xl mx-auto space-y-4"> 
+        {data?.map((community, key) => (
+         <div 
+            key={key}
+            className="border border-white/10 p-4 rounded hover:-translate-y-1 transition transform"
+        >
+            <Link 
+                to="community"
+                className="text-2xl font-bold text-purple-500 hover:underline"
+            >
                 {community.name}
             </Link>
-            <p> {community.description}</p>
+            <p className="text-gray-400 mt-2"> {community.description}</p>
          </div>
         ))}
     </div>
