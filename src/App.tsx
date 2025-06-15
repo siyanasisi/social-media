@@ -3,6 +3,8 @@ import { Navbar } from './components/Navbar'
 import { Route, Routes } from 'react-router'
 import { CreatePostPage } from './pages/CreatePostPage';
 import { PostPage } from './pages/PostPage';
+import { CreateCommunityPage } from './pages/createCommunityPage';
+
 
 
 function App() {
@@ -13,7 +15,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/create" element={<CreatePostPage />} />   
-          <Route path="/post/:id" element={<PostPage />} />     
+          <Route path="/post/:id" element={<PostPage />} /> 
+          <Route path="community/create" element={<CreateCommunityPage/>}/>    
         </Routes>
       </div>
     </div>
