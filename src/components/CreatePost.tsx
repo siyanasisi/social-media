@@ -2,6 +2,9 @@ import { ChangeEvent,  useState } from "react";
 import { useMutation } from "@tanstack/react-query"
 import { supabase } from "../supabase-client"
 import { useAuth } from "../context/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import type { Community } from "./CommunityList";
+import { fetchCommunities} from "./CommunityList"
 
 
 
@@ -9,6 +12,7 @@ interface PostInput {
     title: string;
     content: string;
     avatar_url: string | null;
+    community_id?: number | null;
 }
 const createPost = async (post: PostInput, imageFile: File) => {
 
@@ -37,9 +41,15 @@ const createPost = async (post: PostInput, imageFile: File) => {
 export const CreatePost = () => {
         const [title, setTitle] = useState<string>("");
         const [content, setContent] = useState<string>("");  
+        const [communityId, setCommunityId] = useState<number | null>(null); 
+
         const[selectedFile, setSelectedFile] = useState<File | null>(null);
 
         const { user } = useAuth();
+        
+        const {data: communities } = useQuery<Community[], Error>({
+            queryKey: ["communities"], 
+            queryFn: fetchCommunities})
 
         const {mutate, isPending, isError} = useMutation({
             mutationFn: (data: {post: PostInput, imageFile: File}) => {
@@ -55,7 +65,8 @@ export const CreatePost = () => {
                 post: {
                     title,
                     content, 
-                    avatar_url: user?.user_metadata.avatar_url || null
+                    avatar_url: user?.user_metadata.avatar_url || null,
+                    community_id: communityId
                 },
                 imageFile: selectedFile
             }
@@ -63,6 +74,11 @@ export const CreatePost = () => {
 
         };
 
+
+    const handleCommunityChange = (e: ChangeEvent<HTMLSelectElement>) => {
+        const value = e.target.value;
+        setCommunityId(value ? Number(value) : null )
+    }
 
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
@@ -97,6 +113,19 @@ export const CreatePost = () => {
                   onChange={(event) => setContent(event.target.value)}
             />
             </div>
+
+            <div>
+                <label> select community </label>
+                <select id="community" onChange={handleCommunityChange}>
+                    <option value={""}> --choose a community--</option>
+                    {communities?.map((community, key) => (
+                        <option key={key} value={community.id}>
+                            {community.name}
+                        </option>
+                    ))}
+                </select>
+            </div>
+
             <div>
                 <label htmlFor="image" className="block mb-2 font-medium"> 
                     upload image 

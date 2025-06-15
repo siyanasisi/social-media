@@ -8,7 +8,7 @@ export interface Community {
     description: string;
     created_at: string;
 } 
-const fetchCommunities = async (): Promise<Community[]> => {
+export const fetchCommunities = async (): Promise<Community[]> => {
     const {data, error} = await supabase
         .from("communities")
         .select("*")
