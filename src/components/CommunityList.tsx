@@ -24,21 +24,21 @@ export const CommunityList = () => {
         queryKey: ["communities"], 
         queryFn: fetchCommunities})
 
-    if(isLoading) {
+    if(isLoading) 
         return (
         <div className="text-center py-4"> 
             loading communities...
         </div>
         )
-    }
+    
 
-    if(error) {
+    if(error) 
         return (
         <div className="text-center text-red-500 py-4"> 
             Error: {error.message}
         </div>
         )
-    }
+
     return( 
     <div className="max-w-5xl mx-auto space-y-4"> 
         {data?.map((community, key) => (
