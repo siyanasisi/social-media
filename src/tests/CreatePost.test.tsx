@@ -74,7 +74,7 @@ describe("CreatePost component", () => {
   });
 
   it("updates title, content, community and file input correctly", () => {
-    const { container } = render(<CreatePost />);
+    render(<CreatePost />);
 
     const titleInput = screen.getByLabelText(/title/i);
     fireEvent.change(titleInput, { target: { value: "My Post Title" } });
