@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { Navbar } from '../components/Navbar'
 import * as AuthContext from '../context/AuthContext'
 
-vi.mock('react-router', () => ({
+vi.mock('react-router', () => ({ 
   Link: ({ to, children }: { to: string; children: React.ReactNode }) => (
     <a href={to}>{children}</a>
   )

@@ -26,6 +26,8 @@ vi.mock("../supabase-client", () => ({
   },
 }));
 
+import type { Mock } from "vitest";
+
 describe("CreatePost component", () => {
   const mockUser = {
     user_metadata: { avatar_url: "https://avatar.url/image.png" },
@@ -41,15 +43,15 @@ describe("CreatePost component", () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (useAuth as vi.Mock).mockReturnValue({
+    (useAuth as Mock).mockReturnValue({
       user: mockUser,
     });
-    (useQuery as vi.Mock).mockReturnValue({
+    (useQuery as Mock).mockReturnValue({
       data: mockCommunities,
       isLoading: false,
       isError: false,
     });
-    (useMutation as vi.Mock).mockReturnValue({
+    (useMutation as Mock).mockReturnValue({
       mutate: mockMutate,
       isPending: false,
       isError: false,
@@ -134,11 +136,11 @@ describe("CreatePost component", () => {
   });
 
   it("displays loading state when isPending is true", () => {
-    (useMutation as vi.Mock).mockReturnValue({
+    (useMutation as Mock).mockReturnValue({
       mutate: mockMutate,
       isPending: true,
       isError: false,
-    });
+    }); 
 
     render(<CreatePost />);
 
@@ -146,7 +148,7 @@ describe("CreatePost component", () => {
   });
 
   it("displays error message when isError is true", () => {
-    (useMutation as vi.Mock).mockReturnValue({
+    (useMutation as Mock).mockReturnValue({
       mutate: mockMutate,
       isPending: false,
       isError: true,
