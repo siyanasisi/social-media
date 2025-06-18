@@ -13,7 +13,6 @@ vi.mock("@tanstack/react-query", () => ({
   useQuery: vi.fn(),
 }));
 
-
 vi.mock("../supabase-client", () => ({
   supabase: {
     storage: {
@@ -66,11 +65,19 @@ describe("CreatePost component", () => {
     expect(screen.getByText(/select community/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/upload image/i)).toBeInTheDocument();
 
-    expect(screen.getByRole("option", { name: "--choose a community--" })).toBeInTheDocument();
-    expect(screen.getByRole("option", { name: "Community One" })).toBeInTheDocument();
-    expect(screen.getByRole("option", { name: "Community Two" })).toBeInTheDocument();
+    expect(
+      screen.getByRole("option", { name: "--choose a community--" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("option", { name: "Community One" }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("option", { name: "Community Two" }),
+    ).toBeInTheDocument();
 
-    expect(screen.getByRole("button", { name: /create post/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("button", { name: /create post/i }),
+    ).toBeInTheDocument();
   });
 
   it("updates title, content, community and file input correctly", () => {
@@ -84,7 +91,7 @@ describe("CreatePost component", () => {
     fireEvent.change(contentInput, { target: { value: "Post content here" } });
     expect(contentInput).toHaveValue("Post content here");
 
-    const select = screen.getByRole('combobox');
+    const select = screen.getByRole("combobox");
     fireEvent.change(select, { target: { value: "2" } });
     expect(select).toHaveValue("2");
 
@@ -95,11 +102,11 @@ describe("CreatePost component", () => {
 
   it("calls mutate with correct data when form is submitted with file selected", async () => {
     const { container } = render(<CreatePost />);
-    const form = container.querySelector('form')!;
+    const form = container.querySelector("form")!;
 
     const titleInput = screen.getByLabelText(/title/i);
     const contentInput = screen.getByLabelText(/content/i);
-    const select = screen.getByRole('combobox');
+    const select = screen.getByRole("combobox");
     const fileInput = screen.getByLabelText(/upload image/i);
 
     fireEvent.change(titleInput, { target: { value: "My Post Title" } });
@@ -125,11 +132,15 @@ describe("CreatePost component", () => {
 
   it("does not call mutate if no file selected on submit", () => {
     const { container } = render(<CreatePost />);
-    const form = container.querySelector('form')!;
+    const form = container.querySelector("form")!;
 
-    fireEvent.change(screen.getByLabelText(/title/i), { target: { value: "Title" } });
-    fireEvent.change(screen.getByLabelText(/content/i), { target: { value: "Content" } });
-    
+    fireEvent.change(screen.getByLabelText(/title/i), {
+      target: { value: "Title" },
+    });
+    fireEvent.change(screen.getByLabelText(/content/i), {
+      target: { value: "Content" },
+    });
+
     fireEvent.submit(form);
 
     expect(mockMutate).not.toHaveBeenCalled();
@@ -140,7 +151,7 @@ describe("CreatePost component", () => {
       mutate: mockMutate,
       isPending: true,
       isError: false,
-    }); 
+    });
 
     render(<CreatePost />);
 

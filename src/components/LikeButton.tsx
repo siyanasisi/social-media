@@ -1,109 +1,99 @@
-import { useMutation } from '@tanstack/react-query';
-import { supabase } from '../supabase-client';
-import { useAuth } from '../context/AuthContext';
-import { useQuery } from '@tanstack/react-query';
-import { useQueryClient } from '@tanstack/react-query';
- 
+import { useMutation } from "@tanstack/react-query";
+import { supabase } from "../supabase-client";
+import { useAuth } from "../context/AuthContext";
+import { useQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
-    postId: number;
-};
+  postId: number;
+}
 
-interface Vote {
-    id: number; 
-    post_id: number;
-    user_id: string;
-    vote: number;
+export interface Vote {
+  id: number;
+  post_id: number;
+  user_id: string;
+  vote: number;
 }
 const vote = async (voteValue: number, postId: number, userId: string) => {
+  const { data: existingVote } = await supabase
+    .from("votes")
+    .select("*")
+    .eq("post_id", postId)
+    .eq("user_id", userId)
+    .maybeSingle();
 
-     const { data: existingVote} = await supabase
+  if (existingVote) {
+    if (existingVote.vote === voteValue) {
+      const { error } = await supabase
         .from("votes")
-        .select("*")
-        .eq("post_id", postId)
-        .eq("user_id", userId)
-        .maybeSingle();
+        .delete()
+        .eq("id", existingVote.id);
 
-    if (existingVote) {
-        if(existingVote.vote === voteValue) {
-            const { error } = await supabase
-                .from("votes")
-                .delete()
-                .eq("id", existingVote.id);
-
-                if(error) throw new Error(error.message);
-        } else {
-            const { error } = await supabase
-                .from("votes")
-                .update({vote: voteValue})
-                .eq("id", existingVote.id);
-
-                if(error) throw new Error(error.message);
-
-        }
+      if (error) throw new Error(error.message);
     } else {
-        const { error } = await supabase
-            .from("votes")
-            .insert({post_id: postId, user_id: userId, vote: voteValue});
-        if(error) throw new Error(error.message);
-    }
-
-
-};
-
-const fetchVotes = async (postId: number) : Promise<Vote[]> => {
-const { data, error } = await supabase
+      const { error } = await supabase
         .from("votes")
-        .select("*")
-        .eq("post_id", postId)
+        .update({ vote: voteValue })
+        .eq("id", existingVote.id);
 
+      if (error) throw new Error(error.message);
+    }
+  } else {
+    const { error } = await supabase
+      .from("votes")
+      .insert({ post_id: postId, user_id: userId, vote: voteValue });
     if (error) throw new Error(error.message);
-    return data as Vote[];
-
+  }
 };
-export const LikeButton = ({postId}: Props) => {
 
-    const { user } = useAuth();
+const fetchVotes = async (postId: number): Promise<Vote[]> => {
+  const { data, error } = await supabase
+    .from("votes")
+    .select("*")
+    .eq("post_id", postId);
 
-    const queryClient = useQueryClient();
+  if (error) throw new Error(error.message);
+  return data as Vote[];
+};
+export const LikeButton = ({ postId }: Props) => {
+  const { user } = useAuth();
 
-    const { 
-        data: votes, 
-        isLoading, 
-        error 
-    } = useQuery<Vote[], Error>({
-        queryKey: ["votes", postId],
-        queryFn: () => fetchVotes(postId),
-        refetchInterval: 500
-    });
-        
-    const { mutate } = useMutation({
-        mutationFn: (voteValue: number) =>  {
+  const queryClient = useQueryClient();
 
-            if (!user) throw new Error("You must be logged in to vote");
-             return vote(voteValue, postId, user.id);
+  const {
+    data: votes,
+    isLoading,
+    error,
+  } = useQuery<Vote[], Error>({
+    queryKey: ["votes", postId],
+    queryFn: () => fetchVotes(postId),
+    refetchInterval: 500,
+  });
+
+  const { mutate } = useMutation({
+    mutationFn: (voteValue: number) => {
+      if (!user) throw new Error("You must be logged in to vote");
+      return vote(voteValue, postId, user.id);
     },
 
     onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["votes", postId] });
+      queryClient.invalidateQueries({ queryKey: ["votes", postId] });
+    },
+  });
 
-    }
-});
+  if (isLoading) return <div>Loading votes...</div>;
 
-    if (isLoading) return <div>Loading votes...</div>;
+  if (error) return <div>Error: {error.message}</div>;
 
-    if(error) return <div>Error: {error.message}</div>;
-    
-    const likes = votes?.filter((v) => v.vote === 1).length || 0;
-    const dislikes = votes?.filter((v) => v.vote === -1).length || 0;
-    const userVote = votes?.find((v) => v.user_id === user?.id)?.vote;
+  const likes = votes?.filter((v) => v.vote === 1).length || 0;
+  const dislikes = votes?.filter((v) => v.vote === -1).length || 0;
+  const userVote = votes?.find((v) => v.user_id === user?.id)?.vote;
 
-
-return (
-    <div className="flex items-center space-x-4 my-4">
+  return (
+    <div className="my-4 flex items-center space-x-4">
       <button
         onClick={() => mutate(1)}
-        className={`px-3 py-1 cursor-pointer rounded transition-colors duration-150 ${
+        className={`cursor-pointer rounded px-3 py-1 transition-colors duration-150 ${
           userVote === 1 ? "bg-green-500 text-white" : "bg-gray-200 text-black"
         }`}
       >
@@ -111,7 +101,7 @@ return (
       </button>
       <button
         onClick={() => mutate(-1)}
-        className={`px-3 py-1 cursor-pointer rounded transition-colors duration-150 ${
+        className={`cursor-pointer rounded px-3 py-1 transition-colors duration-150 ${
           userVote === -1 ? "bg-red-500 text-white" : "bg-gray-200 text-black"
         }`}
       >

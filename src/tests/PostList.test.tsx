@@ -53,7 +53,7 @@ describe("PostList", () => {
     (useQuery as unknown as Mock).mockReturnValue({
       isLoading: false,
       error: new Error("Failed to fetch"),
-      data: null, 
+      data: null,
     });
 
     render(<PostList />);

@@ -37,9 +37,7 @@ const queryClient = new QueryClient();
 
 const renderWithProviders = (ui: React.ReactElement) => {
   return render(
-    <QueryClientProvider client={queryClient}>
-      {ui}
-    </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>,
   );
 };
 
@@ -72,7 +70,9 @@ describe("CommentItem", () => {
     expect(screen.getByPlaceholderText("write a reply...")).toBeInTheDocument();
 
     fireEvent.click(screen.getByText("Cancel"));
-    expect(screen.queryByPlaceholderText("write a reply...")).not.toBeInTheDocument();
+    expect(
+      screen.queryByPlaceholderText("write a reply..."),
+    ).not.toBeInTheDocument();
   });
 
   it("calls mutate function when reply form submitted", async () => {
@@ -115,7 +115,9 @@ describe("CommentItem", () => {
       children: [childComment],
     };
 
-    renderWithProviders(<CommentItem comment={commentWithChildren} postId={123} />);
+    renderWithProviders(
+      <CommentItem comment={commentWithChildren} postId={123} />,
+    );
 
     const buttons = screen.getAllByRole("button");
     const toggleButton = buttons[buttons.length - 1];

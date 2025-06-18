@@ -15,7 +15,6 @@ vi.mock("../context/AuthContext", () => ({
   }),
 }));
 
-
 vi.mock("../components/LikeButton", () => ({
   LikeButton: () => <div data-testid="like-button">LikeButton</div>,
 }));
@@ -30,7 +29,6 @@ const mockPost = {
   image_url: "https://example.com/image.jpg",
   created_at: new Date().toISOString(),
 };
-
 
 vi.mock("@tanstack/react-query", async () => {
   const actual = await vi.importActual("@tanstack/react-query");
@@ -77,9 +75,14 @@ describe("PostDetail", () => {
 
     render(<PostDetail postId={1} />);
 
-    expect(screen.getByRole("heading", { name: /test post/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /test post/i }),
+    ).toBeInTheDocument();
     expect(screen.getByText(/this is the post content/i)).toBeInTheDocument();
-    expect(screen.getByAltText(/test post/i)).toHaveAttribute("src", mockPost.image_url);
+    expect(screen.getByAltText(/test post/i)).toHaveAttribute(
+      "src",
+      mockPost.image_url,
+    );
     expect(screen.getByTestId("like-button")).toBeInTheDocument();
     expect(screen.getByTestId("comment-section")).toBeInTheDocument();
   });

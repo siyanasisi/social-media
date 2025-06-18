@@ -24,7 +24,10 @@ describe("PostItem", () => {
     renderWithRouter(<PostItem post={basePost} />);
 
     expect(screen.getByText("Test Post")).toBeInTheDocument();
-    expect(screen.getByAltText("Test Post")).toHaveAttribute("src", basePost.image_url);
+    expect(screen.getByAltText("Test Post")).toHaveAttribute(
+      "src",
+      basePost.image_url,
+    );
   });
 
   it("renders avatar if avatar_url exists", () => {
