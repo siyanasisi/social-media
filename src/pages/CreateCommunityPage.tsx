@@ -1,9 +1,9 @@
-import { CreateCommunity } from "../components/CreateCommunity"
+import { CreateCommunity } from "../components/CreateCommunity";
 
 export const CreateCommunityPage = () => {
-    return (
-        <div className="pt-20">
-            <CreateCommunity />
-        </div>
-    );
+  return (
+    <div className="pt-20">
+      <CreateCommunity />
+    </div>
+  );
 };

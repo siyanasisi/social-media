@@ -1,13 +1,13 @@
-import { PostList } from '../components/PostList';
+import { PostList } from "../components/PostList";
 export const Home = () => {
-    return (
+  return (
     <div className="pt-20">
-        <h2 className="text-6xl font-bold mb-6 text-center bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-transparent">
-            recent posts
-         </h2>
-         <div>
-            <PostList/>
-         </div>
+      <h2 className="mb-6 bg-gradient-to-r from-purple-500 to-pink-500 bg-clip-text text-center text-6xl font-bold text-transparent">
+        recent posts
+      </h2>
+      <div>
+        <PostList />
+      </div>
     </div>
-    );
-}
+  );
+};
