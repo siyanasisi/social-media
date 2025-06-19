@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { supabase } from "../supabase-client";
 
-// --- MOCKS ---
 
 vi.mock("react-router", async () => {
   const actual: any = await vi.importActual("react-router");
@@ -23,7 +22,7 @@ vi.mock("../supabase-client", () => {
   };
 });
 
-// --- TESTS ---
+
 
 describe("CreateCommunity", () => {
   const mockInsert = vi.fn();
@@ -34,13 +33,11 @@ describe("CreateCommunity", () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // mock supabase.from().insert()
     (supabase.from as any).mockReturnValue({
       insert: mockInsert,
     });
 
-    // mock navigate
-    (useNavigate as unknown as vi.Mock).mockReturnValue(mockNavigate);
+    (useNavigate as unknown as any).mockReturnValue(mockNavigate);
   });
 
   function renderComponent() {
