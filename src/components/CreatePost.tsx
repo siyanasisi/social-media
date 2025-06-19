@@ -1,6 +1,7 @@
-import { ChangeEvent, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { supabase } from "../supabase-client";
+import type { ChangeEvent } from "react";
+import { useState } from "react";
+import { useMutation } from "@tanstack/react-query"
+import { supabase } from "../supabase-client"
 import { useAuth } from "../context/AuthContext";
 import { useQuery } from "@tanstack/react-query";
 import type { Community } from "./CommunityList";
