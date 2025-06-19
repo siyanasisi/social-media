@@ -50,7 +50,7 @@ export const CreateCommunity = () => {
         />
       </div>
       <div>
-        <label htmlFor="desciption" className="mb-2 block font-medium">
+        <label htmlFor="description" className="mb-2 block font-medium">
           description
         </label>
         <textarea
