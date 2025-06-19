@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import { supabase } from "../supabase-client";
 
-
 vi.mock("react-router", async () => {
   const actual: any = await vi.importActual("react-router");
   return {
@@ -21,8 +20,6 @@ vi.mock("../supabase-client", () => {
     },
   };
 });
-
-
 
 describe("CreateCommunity", () => {
   const mockInsert = vi.fn();
@@ -44,7 +41,7 @@ describe("CreateCommunity", () => {
     return render(
       <QueryClientProvider client={queryClient}>
         <CreateCommunity />
-      </QueryClientProvider>
+      </QueryClientProvider>,
     );
   }
 
@@ -94,9 +91,7 @@ describe("CreateCommunity", () => {
     fireEvent.click(screen.getByRole("button", { name: /create community/i }));
 
     await waitFor(() => {
-      expect(
-        screen.getByText(/error creating community/i)
-      ).toBeInTheDocument();
+      expect(screen.getByText(/error creating community/i)).toBeInTheDocument();
     });
   });
 });
